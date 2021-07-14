@@ -36,3 +36,13 @@ class Solution(object):
             else: # sum too high, decrease high
                 high -= 1
 
+# testing
+
+numbers = [2,3,4]
+target = 6
+
+sol = Solution()
+
+ans = sol.twoSum(numbers, target)
+
+print(ans)
