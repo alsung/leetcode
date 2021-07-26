@@ -78,4 +78,39 @@ class Solution(object):
 
 # Approach #2: Reservoir Sampling
 # - to do random sampling over a population of unknown size with constant space. 
+# - initially, fill array of reservoir R[] with the heading elements from the pool of samples
+#   S[]. At the end of the algo, the reservoir will contain the final elements we sample from 
+#   the pool. 
+# - then iterate through rest of elements in the pool. For each element, we need to decide if
+#   we want to include it in the reservoir or not. If so, we will replace an existing element
+#   in reservoir with current element. 
 
+# - proof that each element scanned so far has equal chance to be selected into reservoir: 
+
+# - suppose that we have an element at index of i (i > k), when we reach the element, the chance
+#   it will be selected into the reservoir would be k/i. 
+# - later, there is a chance any chosen element in the reservoir might be replaced with a subsequent
+#   element. more specifically, when we reach element j (j > i), there would be chance of 1/j for any 
+#   specific element in reservoir is replaced. Bc for any specific position in reservoir, there is 1/j
+#   chance that it might be chosen by random number generator. On the other hand, there is (j-1)/j 
+#   probability for any specific element in reservoir to stay in reservoir at moment of sampling. 
+# - to sum up, in order for any element in pool to be chosen in final reservoir, a series of independent
+#   events need to occur: 
+#       - first, element needs to be chosen in reservoir when we reach the element
+#       - second, in the following sampling, element should remain in reservoir, not be replaced
+# - therefore, for a sequence of length n, the chance any element ends up in final reservoir represented by:
+#   k/i * i/(i+1) * (i+1)/(i+2) * ... * (n-1)/n = k/n 
+
+# Pseudo:
+# __init__: simply keep head of linked list, rather than convert to array
+# getRandom(): do reservoir sampling starting from head of linked list. More specifically, we scan the 
+#   element one by one and decide whether we should put it into the reservoir (which in our case happens to
+#   be of size one).
+
+class Solution:
+    def __init__(self, head):
+        """
+        @param head: linked list's head
+        Note the head is guaranteed to not be null, so it contains at least one node
+        """
+        self.head = head
