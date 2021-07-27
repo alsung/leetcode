@@ -114,3 +114,21 @@ class Solution:
         Note the head is guaranteed to not be null, so it contains at least one node
         """
         self.head = head
+
+    def getRandom(self):
+        """
+        Returns a random node's value 
+        """
+        scope = 1
+        chosen = 0
+        curr = self.head
+
+        while curr is not None:
+            # decide whether to include the element in reservoir
+            if random.random() < 1.0 / scope:
+                chosen = curr.val
+            # move on to next node
+            curr = curr.next
+            scope += 1
+        return chosen
+
