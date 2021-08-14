@@ -28,3 +28,43 @@
 # it is optimal to choose the subsequence [6,1,5] with alternating sum 
 # (6 + 5) - 1 = 10
 
+# =============================================================================
+# Recursive DFS Decision Tree Approach
+
+class Solution1(object): 
+    def maxAlternatingSum(self, nums):
+        dp = {}
+
+        # i = index, even = true/false
+        def dfs(i, even):
+            if i == len(nums):
+                return 0
+            if (i, even) in dp:
+                return dp[(i, even)]
+
+            total = nums[i] if even else (-1 * nums[i])
+            dp[(i, even)] = max(total + dfs(i + 1, not even), dfs(i + 1, even))
+            return dp[(i, even)]
+        return dfs(0, True)
+
+# Time Complexity: O(n)
+# Space Complexity: O(n)
+
+# =============================================================================
+# Dynamic Programming Approach
+
+class Solution2(object):
+    def maxAlternatingSum(self, nums):
+        # sumEven, sum if first value added
+        sumEven, sumOdd = 0, 0
+
+        for i in range(len(nums) - 1, -1, -1):
+            tmpEven = max(sumOdd + nums[i], sumEven)
+            tmpOdd = max(sumEven - nums[i], sumOdd)
+            sumEven, sumOdd = tmpEven, tmpOdd
+
+        return sumEven
+
+# Time Complexity: O(n)
+# Space Complexity: O(1), using two variables to store value instead of cache
+
