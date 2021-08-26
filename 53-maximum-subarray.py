@@ -139,3 +139,101 @@ class Solution1(object):
 
 # Time: O(N), where len(nums) = N
 # Space: O(1)
+
+"""
+Approach 3: Divide and Conquer (advanced)
+
+Intuition:
+This approach is slower than the second approach and uses more space, but it's 
+still a nice and different way to approach the problem. In an interview, 
+sometimes you may be asked for alternative ways to solve a problem - and divide
+and conqueer is an extremely common type of algorithm. This solution will make 
+use of recursion. 
+
+Divide and conquer algos involve splitting up the input into smaller chunks 
+until they're small enough to be easily solved, and then combining the 
+solutions to get the final overall solution. 
+
+If we were to split our input in half, then logically the optimal subarray either:
+    - uses elements only from the left side
+    - uses elements only from the right side
+    - uses a combination of elements from both left and right side
+
+Thus, the answer is simply the largest of:
+    - the maximum subarray contained only in the left side
+    - the maximum subarray contained only in the right side
+    - the maximum subarray that can use elements from both sides. 
+
+Finding the maximum subarray from the left and right half is straightforward - 
+just recurse the respective half of the array. So, the hard part is figuring 
+out how to find the best subarray that uses elements froom both sides. Lets 
+use a smaller example, nums = [5, -2, 1, -3, 4, -2, 1]. Since we want to use 
+elements from both sides, we also must use the middle element, -3. Now, we can 
+take from the left and right side, but every element must be connected to the 
+middle (since we're forming a subarray). 
+
+The fact that every element must be connected to the middle actually makes our 
+lives a lot easier - every subarray we consider must contain the element 
+immediately beside the center, which means there are only as many subarrays as 
+there are elements. In our example, the right side is [4, -2, 1]. There are 
+only 3 subarrays to consider - [4], [4, -2], [4, -2, 1]. To find the best 
+chain of elements we can take from a half, iterate from the middle to the end 
+(start of the array for the left half) and continuously update some counter 
+curr.
+
+Algo: 
+Now that we know how to find the best subarray containing elements from both 
+sides of any given array, as follows:
+    1. Define a helper function that we will use for recursion:
+        - this function will take input left and right, which defines the 
+            bounds of the array. The return value of this function will be the 
+            best possible subarray for the array that fits between left and right. 
+        - if left > right, we have an empty array. Return negative infinity
+        - Find the midpoint of array. This is (left + right) / 2, rounded down. 
+            Using this midpoint, find the best possible subarray that uses elements 
+            from both sides of the array. 
+        - the best subarray using elements from both sides is only 1 of 3 
+            possibilities. We still need to find the best subarray using only 
+            the left or right halves. So, call this function again, once with 
+            the left half, and once with the right half. 
+        - return the largest of the 3 values - the best left half sum, best 
+            right half sum, best combined sum. 
+    2. Call our helper function with entire input array 
+        (left = 0, right = length - 1). Return final answer. 
+"""
+
+class Solution2(object):
+    def maxSubArray(self, nums):
+        def findBestSubArray(nums, left, right):
+            # base case - empty array
+            if left > right:
+                return -math.inf
+            
+            mid = (left + right) // 2
+            curr = best_left_sum = best_right_sum = 0
+
+            # Iterate from middle to beginning
+            for i in range(mid - 1, left - 1, -1):
+                curr += nums[i]
+                best_left_sum = max(best_left_sum, curr)
+
+            # reset curr and iterate from middle to end
+            curr = 0
+            for i in range(mid + 1, right + 1):
+                curr += nums[i]
+                best_right_sum = max(best_right_sum, curr)
+
+            # the best_combined_sum uses the middle element and the best 
+            # possible sum from each half. 
+            best_combined_sum = nums[mid] + best_right_sum + best_left_sum
+
+            # find the best subarray possible from both halves
+            left_half = findBestSubArray(nums, left, mid-1)
+            right_half = findBestSubArray(nums, mid+1, right)
+
+            # the largest of the 3 is answer
+            return max(best_combined_sum, left_half, right_half)
+
+        # our helper function is designed to solve this problem for any 
+        # array - so just call it using the entire input! 
+        return findBestSubArray(nums, 0, len(nums)-1)
