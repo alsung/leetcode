@@ -293,5 +293,59 @@ values and positions in binary number. So, we can use a 4-digit binary number
 to represent the status of each number in [1,9,10,100], even though these 
 numbers are not continuous. 
 
+Algo: 
+1. Use an integer for each row, column, and box to track whcih numbers have 
+    been previously seen. The i-th bit from the right marks the previous 
+    occurrence of the number i. For example, '000001010' signifies the numbers
+    2 and 4 have been previously seen. 
+2. Iterate over each position (r, c) in the sudoku board. At each iteration, if
+    there is a number at the current position:
+    - use x & (1 << i) to check if we have seen the number i + 1 previously. If
+        x & (1 << i) is nonzero, the number i + 1 is duplicate and the sudoku 
+        is not valid. 
+    - otherwise, we havent seen this number before, and we will use 
+        x | (1 << i) to set the i-th bit from the right to signify the number 
+        i + 1 has been seen. 
+3. Once every position on the sudoku board has been checked, if no duplicates 
+    were found, we return true. 
 """
 
+class Solution2: 
+    def isValidSudoku(self, board):
+        N = 9
+        # Use binary number to check previous occurrence
+        rows = [0] * N
+        cols = [0] * N
+        boxes = [0] * N
+
+        for r in range(N):
+            for c in range(N):
+                # check if the position is filled with number
+                if board[r][c] == ".":
+                    continue
+
+                pos = int(board[r][c]) - 1
+
+                # Check row
+                if rows[r] & (1 << pos):
+                    return False
+                rows[r] |= (1 << pos)
+
+                # Check column
+                if cols[c] & (1 << pos):
+                    return False 
+                cols[c] |= (1 << pos)
+
+                # Check box
+                idx = (r // 3) * 3 + c // 3
+                if boxes[idx] & (1 << pos):
+                    return False
+                boxes[idx] |= (1 << pos)
+
+        return True
+
+# Time: O(N^2), traverse every position on board
+# Space: O(N), in worst scenario, if board is full, we need 3N binary numbers
+# to store all seen numbers in all rows, columns, and boxes. Using a binary 
+# number to record the occurrence of numbers is probably the most 
+# space-efficient method. 
