@@ -46,3 +46,19 @@ class Solution1(object):
     def containsDuplicate(self, nums):
         return len(set(nums)) < len(nums)
 
+"""
+Hashmap Approach
+"""
+
+class Solution2:
+    def containsDuplicate(self, nums):
+        map = {}
+
+        for num in nums:
+            if num in map:
+                return True
+            map[num] = 1
+        return False
+
+# Time Complexity: O(N), iterate only once over list
+# Space Complexity: O(N), store a map of all non-duplicate values

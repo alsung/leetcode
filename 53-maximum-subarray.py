@@ -237,3 +237,33 @@ class Solution2(object):
         # our helper function is designed to solve this problem for any 
         # array - so just call it using the entire input! 
         return findBestSubArray(nums, 0, len(nums)-1)
+
+#==============================================================================
+# Neetcode Approach: https://www.youtube.com/watch?v=5WZl3MMT0Eg&list=PLot-Xpze53ldVwtstag2TL4HQhAnC8ATf&index=8
+
+"""
+Given an integer array nums, find the contiguous subarray (containing at least 
+one number) which has the largest sum and return its sum. 
+
+Have two pointers, left and right, where the right pointer keeps going down 
+and adding values to the current sum. The left pointer shifts to the right when
+the prefix before adding the right pointer is negative. Remove any negative 
+prefix. That way, we will only consider adding positive values to our sum. 
+Sliding window approach. 
+"""
+
+class Solution3:
+    def maxSubArray(self, nums):
+        maxSub = nums[0]
+        curSum = 0
+
+        for n in nums:
+            if curSum < 0:
+                curSum = 0
+            curSum += n
+            maxSub = max(maxSub, curSum)
+
+        return maxSub
+
+# Time Complexity: O(N)
+# Space Complexity: O(1), uses 2 variables to store max and computed sum. 
