@@ -38,4 +38,33 @@ nums is an ascending array that is possibly rotated
 
 class Solution:
     def search(self, nums, target):
-        pass
+        left, right = 0, len(nums) - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+            if target == nums[mid]:
+                return mid
+            
+            # check if mid in left sorted portion
+            if nums[left] <= nums[mid]:
+                # mid in left sorted portion
+
+                if target > nums[mid] or target < nums[left]:
+                    # search right
+                    left = mid + 1
+                else:
+                    # target > mid and target > left, so search left
+                    right = mid - 1
+            
+            else:
+                # mid in right sorted portion
+                if target < nums[mid] and target > nums[right]: # go left
+                    right = mid - 1
+                else:
+                    # target > mid and < right, search right portion
+                    left = mid + 1
+        
+        return -1
+
+# Time Complexity: O(log N)
+# Space Complexity: O(1)
