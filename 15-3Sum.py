@@ -1,6 +1,5 @@
-# [REDO X2]
-
 # Leetcode Question 15
+# 3Sum
 
 # Given an integer array nums, return all triples [nums[i], nums[j], nums[k]]
 # such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
@@ -52,3 +51,38 @@ class Solution(object):
 # Time Complexity: O(N^2) since twoSumII is O(N), and called N times
 # Space Complexity: O(log N) to O(N), depending on implementation of sorting algo
     # for purpose of complexity analysis, ignore memory required for output
+
+###############################################################################
+# neetcode approach: https://www.youtube.com/watch?v=jzZsG8n2R9A&list=PLot-Xpze53ldVwtstag2TL4HQhAnC8ATf&index=8
+
+class Solution1: 
+    def threeSum(self, nums):
+        res = []
+
+        nums.sort()
+        
+        for i, a in enumerate(nums):
+            if i > 0 and a == nums[i-1]: # meaning same value, don't use, skip value
+                continue
+
+            l, r = i + 1, len(nums) - 1
+            while l < r:
+                threeSum = a + nums[l] + nums[r]
+                if threeSum > 0:
+                    r -= 1
+                elif threeSum < 0:
+                    l += 1
+                else:
+                    res.append([a, nums[l], nums[r]])
+
+                    # [-2, -2, 0, 0, 2, 2]
+                    #  L                R
+                    # only have to update 1 pointer, our 2 conditions above will update the other pointer by itself
+                    l += 1
+                    while nums[l] == nums[l - 1] and l < r: # same value, keep shifting pointer
+                        l += 1
+
+        return res
+
+# Time Complexity: O(N log N) + O(N^2), time to sort list + 2 nested loops
+# Space Complexity: O(1) or O(N) depending on sort method used 
