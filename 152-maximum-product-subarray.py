@@ -80,3 +80,38 @@ class Solution:
 
 # Time Complexity: O(N)
 # Space Complexity: O(1)
+
+# =================================================================================
+
+"""
+1/20/2022
+
+nums[]: int
+find contiguous non-empty subarray within array with largest product, return product
+"""
+
+class Solution1:
+    def maxProduct(self, nums):
+        # Base case
+        if len(nums) == 0:
+            return 0
+        
+        # Set max and min so far
+        max_so_far = nums[0]
+        min_so_far = nums[0]
+        result = max_so_far
+
+        # iterate array 1 at a time from next number
+        for i in range(1, len(nums)):
+            curr = nums[i]
+            calc_max = max(curr, max_so_far * curr, min_so_far * curr)
+            min_so_far = min(curr, max_so_far * curr, min_so_far * curr)
+
+            # update max_so_far
+            max_so_far = calc_max
+
+            # cache result
+            result = max(result, max_so_far)
+        
+        # final result
+        return result
