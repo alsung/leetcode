@@ -289,3 +289,46 @@ class Solution3(object):
 # Space: O(1) since we arent using a table to store values. We maintain 
 #       two variables  
 
+# ================================================================================================
+
+"""
+1/19/2022
+
+Robber planning to rob houses along a street. Each house has certain amount of money. 
+If two adjacent houses are robbed, police are warned. 
+Given integer array nums, return maximum amount of money you can rob in 1 night. 
+"""
+
+class Solution4:
+    def __init__(self):
+        self.memo = {}
+
+    def robFrom(self, i, nums):
+        # Base case
+        if i >= len(nums):
+            return 0
+
+        # Return cached value if available
+        if i in self.memo:
+            return self.memo[i]
+
+        # Recursive relation evaluation to get the optimal answer
+        # Subproblem: choose to rob current house, or skip current and move onto next
+            # choose to rob current house: self.robFrom(i+2, nums) + nums[i]
+            # OR
+            # skip current house, move to next house: self.robFrom(i+1, nums) 
+        ans = max(self.robFrom(i+1, nums), nums[i] + self.robFrom(i+2, nums))
+
+        # Cache value for future
+        self.memo[i] = ans
+
+        return ans
+    
+    def rob(self, nums):
+        self.memo = {}
+
+        return self.robFrom(0, nums)
+
+    
+
+
