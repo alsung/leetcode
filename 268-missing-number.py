@@ -67,3 +67,22 @@ class Solution1:
         for num in range(n):
             if num not in num_set:
                 return num
+
+# -----------------------------------------------------------------------------
+# 2/22/2022
+
+# Neetcode Approach:
+"""
+ - using a single for loop, add values in range [0,n] and subtract values from
+   nums array
+"""
+
+# O(N) time | O(1) space
+class Solution2:
+    def missingNumber(self, nums):
+        res = len(nums)
+
+        for i in range(len(nums)):
+            res += (i - nums[i])
+
+        return res
