@@ -50,3 +50,29 @@ class Solution(object):
     
 # Time Complexity: O(amount * len(coins))
 # Space Complexity: O(amount)
+
+
+# =============================================================================
+# Neetcode Approach 2/24/2022
+
+class Solution1:
+    # O(amount * len(coins)) time | O(amount) space
+    def coinChange(self, coins, amount):
+        # amount + 1 or any max int value will work for starting value of dp
+        dp = [amount + 1] * (amount + 1) # we go from 0 --> amount, so amount + 1 length
+        dp[0] = 0 # base case
+
+        # going from bottom-up
+        for am in range(1, amount + 1):
+            for coin in coins:
+                if am - coin >= 0:
+                    # possibly found solution for DP, 1 + dp[am - coin]
+                    dp[am] = min(dp[am], 1 + dp[am - coin]) # recurrence relation
+
+        # if dp[amount] is default value, return -1, could not compute amount
+        return dp[amount] if dp[amount] != amount + 1 else -1
+
+sol = Solution1()
+coins = [1, 2, 5]
+amount = 11
+print(sol.coinChange(coins, amount)) # 3
